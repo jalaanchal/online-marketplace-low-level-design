@@ -29,7 +29,7 @@ class Marketplace {
     }
 
     User& getUser(const string& userId) {
-        return users.at(userId);
+        return users[userId];
     }
 
     void addProduct(const Product& product) {
@@ -38,17 +38,17 @@ class Marketplace {
     }
 
     Product& getProduct(const string& productId) {
-        return products.at(productId);
+        return products[productId];
     }
 
     void addToCart(const string& userId, const string& productId, int quantity) {
-        User& user = users.at(userId);
+        User& user = users[userId];
         user.addToCart(getProduct(productId), quantity);
         cout << "Product with productId = " << productId << " with quantity = " << quantity << " added to the cart of user with userId = " << userId << endl;
     }
 
     vector<CartItem> getCart(const string& userId) {
-        User& user = users.at(userId);
+        User& user = users[userId];
         return user.getCart();
     }
 
@@ -66,12 +66,18 @@ class Marketplace {
     }
 
     vector<Order> getOrderHistory(const string& userId) {
-        if (orderHistory.find(userId) != orderHistory.end()) {
-            return orderHistory.at(userId);
-        } else {
-            // Handle user not found or empty order history scenario
-            return {};
+        if (users.find(userId) == users.end()) {
+            cout << "User not found!";
+            return vector<Order>();
         }
+
+        if (orderHistory.find(userId) == orderHistory.end()) {
+            cout << "Empty order history.";
+            return vector<Order>();
+        }
+
+        vector<Order>& userOrders = orderHistory[userId];
+        return userOrders;
     }
 };
 
